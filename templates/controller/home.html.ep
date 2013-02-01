@@ -2,11 +2,19 @@
 % title 'Mojocoin Testnet3 Faucet';
 
 % if( my $flash = session 'flash' ){
-    <div class="row pagination-centered">
-        <div class="alert alert-success pagination-centered span6 offset3">
-            <%= $flash->{ message } %>
+    % if( $flash->{ message } ){
+        <div class="row pagination-centered">
+            <div class="alert alert-success pagination-centered span6 offset3">
+                <%= $flash->{ message } %>
+            </div>
         </div>
-    </div>
+    % } elsif( $flash->{ error } ){
+        <div class="row pagination-centered">
+            <div class="alert alert-error pagination-centered span6 offset3">
+                <%= $flash->{ error } %>
+            </div>
+        </div>
+    % }
 % }
 
 <h2 class='pagination-centered'>
@@ -15,13 +23,26 @@
     <small>bitcoins in the faucet</small> 
 </h2>
 
+% if( $authorized ) {
+
 <form class="form-signin" action="/request" method="post">
     <h3 class="form-signin-heading">Gimmy 5 Bitcoins!</h3>
     <input type="text" name="address"
         class="input-block-level" placeholder="Your testnet3 address">
+    <input type="text" name="amount"
+        class="input-block-level" placeholder="Bitcoin amount (max: 5)">
     <button class="btn btn-large btn-primary" type="submit">Come to me!</button>
     <button type="reset" class="btn btn-large">Reset</button>
 </form>
+
+% } else {
+    <div class="row pagination-centered">
+        <div class="alert alert-error pagination-centered span6 offset3">
+            Maximum number of withdrawals reached. You can withdraw
+            more in 24 hours.
+        </div>
+    </div>
+% }
 
 <!-- QR Code -->
 <div class="pagination-centered">
@@ -38,7 +59,7 @@
     <div class="container">
         <p><strong>Privacy notice:</strong> We store a salted SHA256 digest of your
             IP address for 24 hours to prevent abuse of our service.</p>
-        <p>No other logs are stored.</p>
+        <p>Your IP address is <strong><%= $ip %></strong></p>
         <ul class="footer-links"> 
             <li><a href="https://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>
             <li class="muted">&middot;</li>

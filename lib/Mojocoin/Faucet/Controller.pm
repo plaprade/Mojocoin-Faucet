@@ -7,6 +7,10 @@ use AnyEventX::CondVar::Util qw( :all );
 use GD::Barcode::QRcode;
 use URI::Escape;
 
+use Scalar::Util qw( looks_like_number );
+
+use List::Util qw( min );
+
 sub home {
     my $self = shift;
 
@@ -15,13 +19,16 @@ sub home {
     # Get a latest address for the default account
     $self->bitcoin->GetBalance
         ->cons( $self->bitcoin->GetAccountAddress( '' ) )
+        ->cons( $self->ip_authorized )
         ->then( sub {
-            my ( $balance, $address ) = @_;
+            my ( $balance, $address, $authorized ) = @_;
             $self->render(
                 template => '/controller/home',
                 address => $address,
                 balance => $balance,
                 url => uri_escape( "bitcoin:$address" ),
+                ip => $self->tx->remote_address,
+                authorized => $authorized,
             );
         });
 }
@@ -37,13 +44,53 @@ sub request {
     ( my $address = $self->param( 'address' ) )
         =~ s/^\s+|\s+$//;
 
-    $self->bitcoin->SendFrom( '' => $address => 0.01 )
-        ->then( sub {
-            $self->flash( message => "0.01 BTC sent to $address" );
-            # Remove the POST request from the browser cache
-            $self->redirect_to( '/' );
-        });
+    my $amount = $self->param( 'amount' ) || 5;
 
+    $address =~ m/^\w+$/
+        or do {
+            $self->flash( error => "Bitcoin address doesn't "
+                . "look like a valid address" );
+            $self->redirect_to( '/' );
+            return;
+        };
+
+    looks_like_number( $amount )
+        or do {
+            $self->flash( error => "Bitcoin amount doesn't "
+                . "look like a number" );
+            $self->redirect_to( '/' );
+            return;
+        };
+
+    # Explicit conversion to Numeric value
+    $amount = min( $amount, 5.00 ) + 0.00;
+
+    $self->ip_authorized
+        ->cons( $self->bitcoin->GetBalance )
+        ->then( sub {
+            my ( $authorized, $balance ) = @_;
+
+            if( not $authorized ){
+                $self->redirect_to( '/' );
+                return;
+            };
+
+            if( $balance < $amount ){
+                $self->flash( error => "Not enough bitcoins "
+                    . "in the Faucet to process your withdrawal" );
+                $self->redirect_to( '/' );
+                return;
+            }
+
+            $self->bitcoin->SendFrom( '' => $address => $amount )
+                ->cons( $self->ip_increment )
+                ->then( sub {
+                    $self->flash( message => 
+                        "$amount BTC sent to $address" );
+                    # Remove the POST request from the browser cache
+                    $self->redirect_to( '/' );
+                });
+        });
 }
 
 sub qrcode {

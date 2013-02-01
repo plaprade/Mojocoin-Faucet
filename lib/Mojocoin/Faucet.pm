@@ -3,6 +3,11 @@ package Mojocoin::Faucet;
 use Mojo::Base 'Mojolicious';
 
 use Mojocoin::BitcoinClient;
+use Mojo::Redis;
+use Digest::SHA qw( sha256 );
+
+use AnyEventX::CondVar;
+use AnyEventX::CondVar::Util qw( :all );
 
 # This method will run once at server start
 sub startup {
@@ -25,6 +30,38 @@ sub startup {
 
     $self->helper( salt => sub {
         state $salt = `echo -n \`cat etc/salt.key\``;
+    });
+
+    $self->helper( redis => sub {
+        state $redis = Mojo::Redis->new( 
+            server => '127.0.0.1:6379'
+        );    
+    });
+
+    $self->helper( ip_authorized => sub {
+        my $self = shift;
+        my $ip = $self->tx->remote_address;
+        my $hash = unpack( 'H*', sha256( $ip . $self->salt ) );
+        cv_build {
+            $self->redis->hget( testnetip => $hash => $_ );
+        } cv_then {
+            my $redis = shift;
+            my $value = shift || 0;
+            $value < 10;
+        };
+    });
+
+    $self->helper( ip_increment => sub {
+        my $self = shift;
+        my $ip = $self->tx->remote_address;
+        my $hash = unpack( 'H*', sha256( $ip . $self->salt ) );
+        cv_build {
+            $self->redis->hget( testnetip => $hash => $_ );
+        } cv_then {
+            my $redis = shift;
+            my $value = shift || 0;
+            $self->redis->hset( testnetip => $hash => ++$value );
+        }
     });
 
     my $r = $self->routes;

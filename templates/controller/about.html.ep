@@ -1,0 +1,3 @@
+% layout 'default', navclass => { more => 'active' };
+% title 'Learn more about the project!';
+<h3 class=pagination-centered>Learn more about the project!</h3>

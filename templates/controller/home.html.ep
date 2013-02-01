@@ -1,0 +1,48 @@
+% layout 'default', navclass => { home => 'active' };
+% title 'Mojocoin Testnet3 Faucet';
+
+% if( my $flash = session 'flash' ){
+    <div class="row pagination-centered">
+        <div class="alert alert-success pagination-centered span6 offset3">
+            <%= $flash->{ message } %>
+        </div>
+    </div>
+% }
+
+<h2 class='pagination-centered'>
+    <small>We have </small>
+    <span class='text-success'><%= $balance %></span>
+    <small>bitcoins in the faucet</small> 
+</h2>
+
+<form class="form-signin" action="/request" method="post">
+    <h3 class="form-signin-heading">Gimmy 5 Bitcoins!</h3>
+    <input type="text" name="address"
+        class="input-block-level" placeholder="Your testnet3 address">
+    <button class="btn btn-large btn-primary" type="submit">Come to me!</button>
+    <button type="reset" class="btn btn-large">Reset</button>
+</form>
+
+<!-- QR Code -->
+<div class="pagination-centered">
+    <h4>Donate back to the Faucet</h4>
+    <h4 class='text-info pagination-centered' ><%= $address %></h4>
+    <div class="qrcode_box">
+        <img src='/qrcode/<%= $url %>' />
+    </div>
+</div>
+
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <p><strong>Privacy notice:</strong> We store a salted SHA256 digest of your
+            IP address for 24 hours to prevent abuse of our service.</p>
+        <p>No other logs are stored.</p>
+        <ul class="footer-links"> 
+            <li><a href="https://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>
+            <li class="muted">&middot;</li>
+            <li><a href="http://bitcoin.org">Bitcoin</a></li>
+        </ul>
+    </div>
+</footer>

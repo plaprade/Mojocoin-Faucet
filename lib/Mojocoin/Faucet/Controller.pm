@@ -46,6 +46,8 @@ sub request {
 
     my $amount = $self->param( 'amount' ) || 5;
 
+    # TODO: This is CRAP. We need a better check for an address
+    # Probably decode_base58check()
     $address =~ m/^\w+$/
         or do {
             $self->flash( error => "Bitcoin address doesn't "

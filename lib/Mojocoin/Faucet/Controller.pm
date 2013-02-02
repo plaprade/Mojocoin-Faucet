@@ -16,28 +16,24 @@ sub home {
 
     $self->render_later;
 
-    # Get a latest address for the default account
     $self->bitcoin->GetBalance
         ->cons( $self->bitcoin->GetAccountAddress( '' ) )
         ->cons( $self->ip_authorized )
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
 
-            ! defined $balance->{ error }
-                or $self->flash( error => "Could not retrieve "
-                    . "faucet balance: $balance->{ error } " );
-
-            ! defined $address->{ error }
-                or $self->flash( error => "Could not retrieve "
-                    . "faucet address: $address->{ error } " );
+            defined $balance && defined $address
+                or $self->flash(
+                    error => "Could not communicate with the "
+                        . "local bitcoin node" 
+                );
 
             $self->render(
                 template => '/controller/home',
-                address => $address->{ result } || 'No Address',
-                balance => $balance->{ result } || 'No Balance',
-                url => $address->{ result } ?
-                    uri_escape( "bitcoin:$address->{ result }" )
-                    : '',
+                address => $address || 'No Address',
+                balance => $balance || 'No Balance',
+                url => $address ?
+                    uri_escape( "bitcoin:$address" ) : '',
                 ip => $self->tx->remote_address,
                 authorized => $authorized,
             );
@@ -59,8 +55,7 @@ sub request {
 
     looks_like_number( $amount ) 
         && $amount >= 0.00000001 or do {
-        $self->flash( error => "Invalid bitcoin amount: "
-            . $amount );
+        $self->flash( error => "Invalid bitcoin amount: $amount" );
         $self->redirect_to( '/' );
         return;
     };
@@ -86,30 +81,23 @@ sub request {
                 return;
             }
 
-            if( defined $balance->{ error } ){
-                $self->flash( error => "Cound not retrieve faucet "
-                    . "balance: $balance->{ error }. " );
+            defined $balance && defined $valid or do {
+                $self->flash( error => "Could not communicate "
+                    . "with the local bitcoin node" );
                 $self->redirect_to( '/' );
                 return;
-            }
+            };
 
-            if( defined $valid->{ error } ){
-                $self->flash( error => "Cound not validate your "
-                    . " bitcoin address: $valid->{ error }. " );
-                $self->redirect_to( '/' );
-                return;
-            }
-
-            if( ! $valid->{ result }->{ isvalid } ){
+            if( not $valid->{ isvalid } ){
                 $self->flash( error => "Invalid bitcoin address: "
                     . $address );
                 $self->redirect_to( '/' );
                 return;
             }
 
-            if( $balance->{ result } < $amount ){
+            if( $balance < $amount ){
                 $self->flash( error => "Not enough bitcoins "
-                    . "in the Faucet to process your withdrawal" );
+                    . "in the faucet to process your withdrawal" );
                 $self->redirect_to( '/' );
                 return;
             }

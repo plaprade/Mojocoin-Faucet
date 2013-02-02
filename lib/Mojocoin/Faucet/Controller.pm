@@ -22,11 +22,22 @@ sub home {
         ->cons( $self->ip_authorized )
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
+
+            ! defined $balance->{ error }
+                or $self->flash( error => "Could not retrieve "
+                    . "faucet balance: $balance->{ error } " );
+
+            ! defined $address->{ error }
+                or $self->flash( error => "Could not retrieve "
+                    . "faucet address: $address->{ error } " );
+
             $self->render(
                 template => '/controller/home',
-                address => $address,
-                balance => $balance,
-                url => uri_escape( "bitcoin:$address" ),
+                address => $address->{ result } || 'No Address',
+                balance => $balance->{ result } || 'No Balance',
+                url => $address->{ result } ?
+                    uri_escape( "bitcoin:$address->{ result }" )
+                    : '',
                 ip => $self->tx->remote_address,
                 authorized => $authorized,
             );
@@ -44,40 +55,59 @@ sub request {
     ( my $address = $self->param( 'address' ) )
         =~ s/^\s+|\s+$//;
 
-    my $amount = $self->param( 'amount' ) || 5;
+    my $amount = $self->param( 'amount' );
 
-    # TODO: This is CRAP. We need a better check for an address
-    # Probably decode_base58check()
-    $address =~ m/^\w+$/
-        or do {
-            $self->flash( error => "Bitcoin address doesn't "
-                . "look like a valid address" );
-            $self->redirect_to( '/' );
-            return;
-        };
+    looks_like_number( $amount ) 
+        && $amount >= 0.00000001 or do {
+        $self->flash( error => "Invalid bitcoin amount: "
+            . $amount );
+        $self->redirect_to( '/' );
+        return;
+    };
 
-    looks_like_number( $amount )
-        or do {
-            $self->flash( error => "Bitcoin amount doesn't "
-                . "look like a number" );
-            $self->redirect_to( '/' );
-            return;
-        };
+    $amount <= 5 or do {
+        $self->flash( error => "We only accept withdrawals "
+            . "up to 5 Bitcoins" );
+        $self->redirect_to( '/' );
+        return;
+    };
 
     # Explicit conversion to Numeric value
-    $amount = min( $amount, 5.00 ) + 0.00;
+    $amount += 0.00;
 
     $self->ip_authorized
         ->cons( $self->bitcoin->GetBalance )
+        ->cons( $self->bitcoin->ValidateAddress( $address ) )
         ->then( sub {
-            my ( $authorized, $balance ) = @_;
+            my ( $authorized, $balance, $valid ) = @_;
 
             if( not $authorized ){
                 $self->redirect_to( '/' );
                 return;
-            };
+            }
 
-            if( $balance < $amount ){
+            if( defined $balance->{ error } ){
+                $self->flash( error => "Cound not retrieve faucet "
+                    . "balance: $balance->{ error }. " );
+                $self->redirect_to( '/' );
+                return;
+            }
+
+            if( defined $valid->{ error } ){
+                $self->flash( error => "Cound not validate your "
+                    . " bitcoin address: $valid->{ error }. " );
+                $self->redirect_to( '/' );
+                return;
+            }
+
+            if( ! $valid->{ result }->{ isvalid } ){
+                $self->flash( error => "Invalid bitcoin address: "
+                    . $address );
+                $self->redirect_to( '/' );
+                return;
+            }
+
+            if( $balance->{ result } < $amount ){
                 $self->flash( error => "Not enough bitcoins "
                     . "in the Faucet to process your withdrawal" );
                 $self->redirect_to( '/' );

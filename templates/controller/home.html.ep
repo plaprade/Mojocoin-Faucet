@@ -26,13 +26,15 @@
 % if( $authorized ) {
 
 <form class="form-signin" action="/request" method="post">
-    <h3 class="form-signin-heading">Gimmy 5 Bitcoins!</h3>
+    <h3 class="form-signin-heading pagination-centered">Pop me some coins!</h3>
     <input type="text" name="address"
         class="input-block-level" placeholder="Your testnet3 address">
     <input type="text" name="amount"
         class="input-block-level" placeholder="Bitcoin amount (max: 5)">
-    <button class="btn btn-large btn-primary" type="submit">Come to me!</button>
-    <button type="reset" class="btn btn-large">Reset</button>
+    <div class="pagination-centered">
+        <button class="btn btn-large btn-primary" type="submit">Send!</button>
+        <button type="reset" class="btn btn-large">Reset</button>
+    </div>
 </form>
 
 % } else {
@@ -65,5 +67,6 @@
             <li class="muted">&middot;</li>
             <li><a href="http://bitcoin.org">Bitcoin</a></li>
         </ul>
+        <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong></p>
     </div>
 </footer>

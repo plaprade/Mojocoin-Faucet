@@ -1,3 +1,44 @@
 % layout 'default', navclass => { about => 'active' };
 % title 'Learn more about the project!';
-<h3 class=pagination-centered>Learn more about the project!</h3>
+
+<div class='container-fluid'>
+<div class='row-fluid'>
+<div class='span6 offset3'>
+
+<p class='lead'>The Mojocoin Faucet is free software<p>
+
+<p class='lead'>
+    <a href='http://github.com/ciphermonk/Mojocoin-Faucet' >
+    github.com/ciphermonk/Mojocoin-Faucet
+    </a>
+</p>
+
+<p>The Mojocoin Faucet is developed and hosted free of charge. The
+source code is released into the public domain. You can contribute to
+the project by helping with code maintenance or by donating to</p>
+
+<p class='lead'>
+    <a href='bitcoin:17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi' >
+    17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi
+    </a>
+</p>
+
+<p>We run a full bitcoin testnet3 node. It mines 24/7 and is available
+at</p>
+
+<p class='lead'>199.26.85.40:18333</p>
+
+<p>
+The Mojocoin Faucet is powered by
+
+<ul>
+    <li>bitcoind <a href='http://bitcoin.org' >bitcoin.org</a></li>
+    <li>Mojolicious <a href='http://mojolicio.us' >mojolicio.us</a></li>
+    <li>Redis <a href='http://redis.io' >redis.io</a></li>
+</ul>
+</p>
+
+</div>
+</div>
+</div>
+

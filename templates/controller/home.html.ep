@@ -63,18 +63,3 @@
 
 </div>
 
-<!-- Footer
-================================================== -->
-<footer class="footer">
-    <div class="container">
-        <p><strong>Privacy notice:</strong> We store your IP address
-            for up to 24 hours to prevent abuse of our service</p>
-        <p>Your IP address is <strong><%= $ip %></strong></p>
-        <ul class="footer-links"> 
-            <li><a href="https://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>
-            <li class="muted">&middot;</li>
-            <li><a href="http://bitcoin.org">Bitcoin</a></li>
-        </ul>
-        <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong></p>
-    </div>
-</footer>

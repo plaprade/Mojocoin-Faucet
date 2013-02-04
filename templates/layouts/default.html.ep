@@ -126,6 +126,22 @@
 
     <%= content %>
 
+    <!-- Footer
+    ================================================== -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>Privacy notice:</strong> We store your IP address
+                for up to 24 hours to prevent abuse of our service</p>
+            <p>Your IP address is <strong><%= $self->tx->remote_address %></strong></p>
+            <ul class="footer-links"> 
+                <li><a href="http://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>
+                <li class="muted">&middot;</li>
+                <li><a href="http://bitcoin.org">Bitcoin</a></li>
+            </ul>
+            <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong></p>
+        </div>
+    </footer>
+
     %= javascript 'js/jquery.js'
     %= javascript 'bootstrap/js/bootstrap.min.js'
 

@@ -37,7 +37,6 @@ sub home {
                 max_withdrawal => max_withdrawal( $balance ),
                 url => $address ?
                     uri_escape( "bitcoin:$address" ) : '',
-                ip => $self->tx->remote_address,
                 authorized => $authorized,
             );
         });

@@ -23,8 +23,8 @@
                         box-shadow: 0 1px 2px rgba(0,0,0,.05);
             }
             .qrcode_box {
-                width: 225px;
-                height: 225px;
+                width: 210px;
+                height: 210px;
                 margin: auto;
                 border: 1px solid #e5e5e5;
                 -webkit-border-radius: 5px;
@@ -124,7 +124,7 @@
         </div>
     </div>
 
-    <div class="container" ><%= content %></div>
+    <%= content %>
 
     %= javascript 'js/jquery.js'
     %= javascript 'bootstrap/js/bootstrap.min.js'

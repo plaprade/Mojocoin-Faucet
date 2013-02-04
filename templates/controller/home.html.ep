@@ -1,20 +1,20 @@
 % layout 'default', navclass => { home => 'active' };
 % title 'Mojocoin Testnet3 Faucet';
 
+<div class='container-fluid'>
+
 % if( my $flash = session 'flash' ){
+    <div class='row-fluid'>
     % if( $flash->{ message } ){
-        <div class="row pagination-centered">
-            <div class="alert alert-success pagination-centered span6 offset3">
-                <%= $flash->{ message } %>
-            </div>
+        <div class="alert alert-success pagination-centered span6 offset3">
+            <%= $flash->{ message } %>
         </div>
     % } elsif( $flash->{ error } ){
-        <div class="row pagination-centered">
-            <div class="alert alert-error pagination-centered span6 offset3">
-                <%= $flash->{ error } %>
-            </div>
+        <div class="alert alert-error span6 pagination-centered span6 offset3">
+            <%= $flash->{ error } %>
         </div>
     % }
+    </div>
 % }
 
 <h2 class='pagination-centered'>
@@ -25,12 +25,18 @@
 
 % if( $authorized ) {
 
+<h2 class='pagination-centered'>
+    <small>Maximum withdrawal per request is</small>
+    <span class='text-info'><%= $max_withdrawal %></span>
+    <small>bitcoins</small>
+</h2>
+
 <form class="form-signin" action="/request" method="post">
     <h3 class="form-signin-heading pagination-centered">Pop me some coins!</h3>
     <input type="text" name="address"
         class="input-block-level" placeholder="Your testnet3 address">
     <input type="text" name="amount"
-        class="input-block-level" placeholder="Bitcoin amount (max: 5)">
+        class="input-block-level" placeholder="Bitcoin amount (max: <%= $max_withdrawal %>)">
     <div class="pagination-centered">
         <button class="btn btn-large btn-primary" type="submit">Send!</button>
         <button type="reset" class="btn btn-large">Reset</button>
@@ -38,7 +44,7 @@
 </form>
 
 % } else {
-    <div class="row pagination-centered">
+    <div class="row-fluid">
         <div class="alert alert-error pagination-centered span6 offset3">
             Maximum number of withdrawals reached. You can withdraw
             more in 24 hours.
@@ -55,12 +61,14 @@
     </div>
 </div>
 
+</div>
+
 <!-- Footer
 ================================================== -->
 <footer class="footer">
     <div class="container">
-        <p><strong>Privacy notice:</strong> We store a salted SHA256 digest of your
-            IP address for 24 hours to prevent abuse of our service.</p>
+        <p><strong>Privacy notice:</strong> We store your IP address
+            for up to 24 hours to prevent abuse of our service</p>
         <p>Your IP address is <strong><%= $ip %></strong></p>
         <ul class="footer-links"> 
             <li><a href="https://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>

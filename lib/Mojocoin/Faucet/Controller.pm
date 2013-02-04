@@ -2,6 +2,8 @@ package Mojocoin::Faucet::Controller;
 
 use Mojo::Base 'Mojolicious::Controller';
 
+use Mojocoin::Faucet::Util qw( :all );
+
 use AnyEventX::CondVar;
 use AnyEventX::CondVar::Util qw( :all );
 use GD::Barcode::QRcode;
@@ -31,7 +33,8 @@ sub home {
             $self->render(
                 template => '/controller/home',
                 address => $address || 'No Address',
-                balance => $balance || 'No Balance',
+                balance => format_balance( $balance ),
+                max_withdrawal => max_withdrawal( $balance ),
                 url => $address ?
                     uri_escape( "bitcoin:$address" ) : '',
                 ip => $self->tx->remote_address,
@@ -48,21 +51,16 @@ sub request {
 
     $self->render_later;
 
+    # Remove whitespaces from address
     ( my $address = $self->param( 'address' ) )
         =~ s/^\s+|\s+$//;
 
-    my $amount = $self->param( 'amount' );
+    # Round up to the next Satoshi
+    my $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
 
     looks_like_number( $amount ) 
         && $amount >= 0.00000001 or do {
         $self->flash( error => "Invalid bitcoin amount: $amount" );
-        $self->redirect_to( '/' );
-        return;
-    };
-
-    $amount <= 5 or do {
-        $self->flash( error => "We only accept withdrawals "
-            . "up to 5 Bitcoins" );
         $self->redirect_to( '/' );
         return;
     };
@@ -95,12 +93,14 @@ sub request {
                 return;
             }
 
-            if( $balance < $amount ){
-                $self->flash( error => "Not enough bitcoins "
-                    . "in the faucet to process your withdrawal" );
+            my $max_withdrawal = max_withdrawal( $balance );
+
+            $amount <= $max_withdrawal or do {
+                $self->flash( error => "We currently only accept "
+                    . "withdrawals up to $max_withdrawal Bitcoins" );
                 $self->redirect_to( '/' );
                 return;
-            }
+            };
 
             $self->bitcoin->SendFrom( '' => $address => $amount )
                 ->cons( $self->ip_increment )
@@ -118,7 +118,7 @@ sub qrcode {
     $self->render( 
         data => GD::Barcode::QRcode->new(
             $self->param( 'string' ), {
-                Version => 5,
+                Version => 4,
                 ModuleSize => 5,
             })->plot->png, 
         format => 'png' 

@@ -50,21 +50,33 @@ sub request {
 
     $self->render_later;
 
-    # Remove whitespaces from address
-    ( my $address = $self->param( 'address' ) )
-        =~ s/^\s+|\s+$//;
+    my ( $address, $amount ) =
+        ( $self->param( 'address' ), $self->param( 'amount' ) );
 
-    # Round up to the next Satoshi
-    my $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
+    # Trim whitespaces from user input
+    $address =~ s/^\s+|\s+$//g;
+    $amount =~ s/^\s+|\s+$//g;
 
-    looks_like_number( $amount ) 
-        && $amount >= 0.00000001 or do {
-        $self->flash( error => "Invalid bitcoin amount: $amount" );
+    # Validate address integrity before sending
+    # it to bitcoind for validation
+    $address =~ m/^\w+$/ or do {
+        $self->flash( error => 'Invalid bitcoin address' );
         $self->redirect_to( '/' );
         return;
     };
 
-    # Explicit conversion to Numeric value
+    # Validate the amount as a numeric value
+    looks_like_number( $amount ) 
+        && $amount >= 0.00000001 or do {
+        $self->flash( error => "Invalid bitcoin amount" );
+        $self->redirect_to( '/' );
+        return;
+    };
+
+    # Round up to the next Satoshi 
+    $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
+
+    # Explicit conversion to numeric. Otherwise SendFrom doesn't work
     $amount += 0.00;
 
     $self->ip_authorized
@@ -86,8 +98,7 @@ sub request {
             };
 
             if( not $valid->{ isvalid } ){
-                $self->flash( error => "Invalid bitcoin address: "
-                    . $address );
+                $self->flash( error => 'Invalid bitcoin address' );
                 $self->redirect_to( '/' );
                 return;
             }

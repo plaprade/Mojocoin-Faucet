@@ -4,8 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use Mojocoin::Faucet::Util qw( :all );
 
-use AnyEventX::CondVar;
-use AnyEventX::CondVar::Util qw( :all );
+use Continuum;
 use GD::Barcode::QRcode;
 use URI::Escape;
 
@@ -19,8 +18,8 @@ sub home {
     $self->render_later;
 
     $self->bitcoin->GetBalance
-        ->cons( $self->bitcoin->GetAccountAddress( '' ) )
-        ->cons( $self->ip_authorized )
+        ->merge( $self->bitcoin->GetAccountAddress( '' ) )
+        ->merge( $self->ip_authorized )
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
 
@@ -50,26 +49,38 @@ sub request {
 
     $self->render_later;
 
-    # Remove whitespaces from address
-    ( my $address = $self->param( 'address' ) )
-        =~ s/^\s+|\s+$//;
+    my ( $address, $amount ) =
+        ( $self->param( 'address' ), $self->param( 'amount' ) );
 
-    # Round up to the next Satoshi
-    my $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
+    # Trim whitespaces from user input
+    $address =~ s/^\s+|\s+$//g;
+    $amount =~ s/^\s+|\s+$//g;
 
-    looks_like_number( $amount ) 
-        && $amount >= 0.00000001 or do {
-        $self->flash( error => "Invalid bitcoin amount: $amount" );
+    # Validate address integrity before sending
+    # it to bitcoind for validation
+    $address =~ m/^\w+$/ or do {
+        $self->flash( error => 'Invalid bitcoin address' );
         $self->redirect_to( '/' );
         return;
     };
 
-    # Explicit conversion to Numeric value
+    # Validate the amount as a numeric value
+    looks_like_number( $amount ) 
+        && $amount >= 0.00000001 or do {
+        $self->flash( error => "Invalid bitcoin amount" );
+        $self->redirect_to( '/' );
+        return;
+    };
+
+    # Round up to the next Satoshi 
+    $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
+
+    # Explicit conversion to numeric. Otherwise SendFrom doesn't work
     $amount += 0.00;
 
     $self->ip_authorized
-        ->cons( $self->bitcoin->GetBalance )
-        ->cons( $self->bitcoin->ValidateAddress( $address ) )
+        ->merge( $self->bitcoin->GetBalance )
+        ->merge( $self->bitcoin->ValidateAddress( $address ) )
         ->then( sub {
             my ( $authorized, $balance, $valid ) = @_;
 
@@ -86,8 +97,7 @@ sub request {
             };
 
             if( not $valid->{ isvalid } ){
-                $self->flash( error => "Invalid bitcoin address: "
-                    . $address );
+                $self->flash( error => 'Invalid bitcoin address' );
                 $self->redirect_to( '/' );
                 return;
             }
@@ -102,7 +112,7 @@ sub request {
             };
 
             $self->bitcoin->SendFrom( '' => $address => $amount )
-                ->cons( $self->ip_increment )
+                ->merge( $self->ip_increment )
                 ->then( sub {
                     $self->flash( message => 
                         "$amount BTC sent to $address" );

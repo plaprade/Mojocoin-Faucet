@@ -44,8 +44,11 @@ sub startup {
     $self->helper( ip_authorized => sub {
         my $self = shift;
         my $ip = $self->tx->remote_address;
-        # Maximum 10 withdrawals per IP address
-        $self->redis->hget( testnetip => $ip ) < 10;
+        $self->redis->hget( testnetip => $ip )->then( sub {
+            my $value = shift || 0;
+            # Maximum 10 withdrawals per IP address
+            $value < 10;
+        });
     });
 
     # Increments the withdrawal counter of the current IP addesss.

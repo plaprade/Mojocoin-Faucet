@@ -8,6 +8,8 @@ use Continuum::Redis;
 use Mojo::Redis;
 use Digest::SHA qw( sha256 );
 
+use version; our $VERSION = version->declare("v0.0.1"); 
+
 # This method will run once at server start
 sub startup {
     my $self = shift;
@@ -144,8 +146,15 @@ L<Continuum::BitcoinRPC|http://github.com/ciphermonk/Continuum-BitcoinRPC>
 =item *
 L<Continuum::Redis|http://github.com/ciphermonk/Continuum-Redis>
 
+=item*
+L<anyevent-jsonrpc-perl|http://github.com/ciphermonk/anyevent-jsonrpc-perl>
+This is a fork from L<AnyEvent::JSONRPC::HTTP::Client> fixing a small
+issue with error handling in the HTTP client. We only use the HTTP
+client from this package.
+
 =item *
-L<Mojocoin::Faucet|http://github.com/ciphermonk/Mojocoin-Faucet>
+L<Mojocoin::Faucet|http://github.com/ciphermonk/Mojocoin-Faucet> (this
+project)
 
 =back
 
@@ -164,9 +173,6 @@ L<EV> (recommended event loop library)
 
 =item * 
 L<Mojo::Redis>
-
-=item *
-L<AnyEvent::JSONRPC::HTTP::Client>
 
 =back
 
@@ -202,9 +208,9 @@ morbo script/mojocoin-faucet.pl -l http://127.0.0.1:3000
 script/mojocoin-faucet.pl daemon -l http://*:80
 
 You can use the Hypnotoad server for a prefork Unix-optimized server.
-It's not been tested however, so hold your horses. The single process
-should be plenty for now as it runs on an event loop in cooperative
-multitasking mode. 
+It's not been tested yet however for the faucet, so hold your horses.
+The single process should be plenty for now as it runs on an event
+loop in cooperative multitasking mode. 
 
 =head2 Bugs
 

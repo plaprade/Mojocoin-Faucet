@@ -61,7 +61,12 @@ You will need to grab the following Perl modules from github:
 - [Continuum](http://github.com/ciphermonk/Continuum)
 - [Continuum::BitcoinRPC](http://github.com/ciphermonk/Continuum-BitcoinRPC)
 - [Continuum::Redis](http://github.com/ciphermonk/Continuum-Redis)
-- [Mojocoin::Faucet](http://github.com/ciphermonk/Mojocoin-Faucet)
+- [anyevent-jsonrpc-perl](http://github.com/ciphermonk/anyevent-jsonrpc-perl)
+This is a fork from [AnyEvent::JSONRPC::HTTP::Client](http://search.cpan.org/perldoc?AnyEvent::JSONRPC::HTTP::Client) fixing a small
+issue with error handling in the HTTP client. We only use the HTTP
+client from this package.
+- [Mojocoin::Faucet](http://github.com/ciphermonk/Mojocoin-Faucet) (this
+project)
 
 And _at least_ the following modules from CPAN:
 
@@ -69,7 +74,6 @@ And _at least_ the following modules from CPAN:
 - [AnyEvent](http://search.cpan.org/perldoc?AnyEvent)
 - [EV](http://search.cpan.org/perldoc?EV) (recommended event loop library)
 - [Mojo::Redis](http://search.cpan.org/perldoc?Mojo::Redis)
-- [AnyEvent::JSONRPC::HTTP::Client](http://search.cpan.org/perldoc?AnyEvent::JSONRPC::HTTP::Client)
 
 You might be missing some other CPAN dependencies depending on your
 local Perl installation. Just install them as you go.
@@ -103,9 +107,9 @@ morbo script/mojocoin-faucet.pl -l http://127.0.0.1:3000
 script/mojocoin-faucet.pl daemon -l http://\*:80
 
 You can use the Hypnotoad server for a prefork Unix-optimized server.
-It's not been tested however, so hold your horses. The single process
-should be plenty for now as it runs on an event loop in cooperative
-multitasking mode. 
+It's not been tested yet however for the faucet, so hold your horses.
+The single process should be plenty for now as it runs on an event
+loop in cooperative multitasking mode. 
 
 ## Bugs
 

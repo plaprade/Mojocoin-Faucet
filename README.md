@@ -62,9 +62,13 @@ You will need to grab the following Perl modules from github:
 - [Continuum::BitcoinRPC](http://github.com/ciphermonk/Continuum-BitcoinRPC)
 - [Continuum::Redis](http://github.com/ciphermonk/Continuum-Redis)
 - [anyevent-jsonrpc-perl](http://github.com/ciphermonk/anyevent-jsonrpc-perl)
-This is a fork from [AnyEvent::JSONRPC::HTTP::Client](http://search.cpan.org/perldoc?AnyEvent::JSONRPC::HTTP::Client) fixing a small
-issue with error handling in the HTTP client. We only use the HTTP
-client from this package.
+
+```perl
+    This is a fork from [AnyEvent::JSONRPC::HTTP::Client](http://search.cpan.org/perldoc?AnyEvent::JSONRPC::HTTP::Client) fixing a small
+    issue with error handling in the HTTP client. We only use the HTTP
+    client from this package.
+```
+
 - [Mojocoin::Faucet](http://github.com/ciphermonk/Mojocoin-Faucet) (this
 project)
 

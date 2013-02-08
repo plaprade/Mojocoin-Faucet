@@ -1,5 +1,6 @@
 package Mojocoin::Faucet;
 
+use EV;
 use Mojo::Base 'Mojolicious';
 
 use Continuum;

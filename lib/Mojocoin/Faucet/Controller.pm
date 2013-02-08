@@ -4,8 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use Mojocoin::Faucet::Util qw( :all );
 
-use AnyEventX::CondVar;
-use AnyEventX::CondVar::Util qw( :all );
+use Continuum;
 use GD::Barcode::QRcode;
 use URI::Escape;
 
@@ -19,8 +18,8 @@ sub home {
     $self->render_later;
 
     $self->bitcoin->GetBalance
-        ->cons( $self->bitcoin->GetAccountAddress( '' ) )
-        ->cons( $self->ip_authorized )
+        ->merge( $self->bitcoin->GetAccountAddress( '' ) )
+        ->merge( $self->ip_authorized )
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
 
@@ -80,8 +79,8 @@ sub request {
     $amount += 0.00;
 
     $self->ip_authorized
-        ->cons( $self->bitcoin->GetBalance )
-        ->cons( $self->bitcoin->ValidateAddress( $address ) )
+        ->merge( $self->bitcoin->GetBalance )
+        ->merge( $self->bitcoin->ValidateAddress( $address ) )
         ->then( sub {
             my ( $authorized, $balance, $valid ) = @_;
 
@@ -113,7 +112,7 @@ sub request {
             };
 
             $self->bitcoin->SendFrom( '' => $address => $amount )
-                ->cons( $self->ip_increment )
+                ->merge( $self->ip_increment )
                 ->then( sub {
                     $self->flash( message => 
                         "$amount BTC sent to $address" );

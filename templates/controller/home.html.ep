@@ -57,7 +57,7 @@
     <h4>Donate back to the Faucet</h4>
     <h4 class='text-info pagination-centered' ><%= $address %></h4>
     <div class="qrcode_box">
-        <img src='/qrcode/<%= $url %>' />
+        <a href="bitcoin:<%= $address %>"><img src='/qrcode/<%= $url %>' /></a>
     </div>
 </div>
 

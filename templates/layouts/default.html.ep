@@ -117,8 +117,11 @@
                         <li class='<%= $navclass->{ about } %>'>
                             <a href="/about">About the Mojocoin Faucet</a></li>
                     </ul>
-                    <p class="navbar-text pull-right"><span class="text-info"> 
-                       Powered by Mojolicious</span></p>
+                    <p class="navbar-text pull-right">
+                        <span class="text-info">
+                             <a href="http://mojolicio.us/">Powered by Mojolicious</a>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -138,7 +141,9 @@
                 <li class="muted">&middot;</li>
                 <li><a href="http://bitcoin.org">Bitcoin</a></li>
             </ul>
-            <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong></p>
+            <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong>
+                (<a href="bitcoin:17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi">link</a>)
+            </p>
         </div>
     </footer>
 

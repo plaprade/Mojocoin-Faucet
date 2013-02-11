@@ -147,9 +147,6 @@
         </div>
     </footer>
 
-    %= javascript 'js/jquery.js'
-    %= javascript 'bootstrap/js/bootstrap.min.js'
-
   </body>
 </html>
 

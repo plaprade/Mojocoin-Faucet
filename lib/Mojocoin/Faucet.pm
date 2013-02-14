@@ -128,16 +128,16 @@ understand:
             # operations above are completed
         });
 
-To communicate with the Satoshi Bitcoin implementation, we built
+To communicate with the Satoshi Bitcoin implementation, I wrote
 L<Continuum::BitcoinRPC|http://github.com/ciphermonk/Continuum-BitcoinRPC>.
 It is a simple JSON/RPC interface to bitcoind.
 
 =head2 Installation
 
-Upgrade to perl v5.14 if you didn't already. We use some features that
-are only really well supported from version 5.14 onwards.
+Upgrade to Perl v5.14 if you haven't already. This program requires some
+features that are only well supported from that version.
 
-You will need to grab the following Perl modules from github:
+You will need the following Perl modules from github:
 
 =over
 
@@ -180,26 +180,26 @@ L<Mojo::Redis>
 
 =back
 
-You might be missing some other CPAN dependencies depending on your
-local Perl installation. Just install them as you go.
+You may be missing upstream dependencies from CPAN.  Just install them as you
+go.
 
 You'll need to install bitcoind and configure it to use RPC:
 
 L<bitcoin.org|http://bitcoin.org>
 
-The Faucet needs to be able to communicate with bitcoind through RPC.
-In the projects root, create the folder C<etc> and create two files
-called C<username.key> and C<password.key> containing respectively the
-bitcoin RPC username and password. This is fine for a testnet faucet,
-but might need to be better secured for a production faucet. 
+The Faucet needs to be able to communicate with bitcoind through RPC.  In the
+project root, create a directory named C<etc> and two files called
+C<username.key> and C<password.key> containing the bitcoin RPC username and
+password respectively. This is fine for a testnet faucet, but you may need to
+apply better security if you wish to run a production faucet. 
 
 Again in C<etc>, create a file called C<secret.key> with a random
 password. This secret is used to sign session cookies. However, we
-don't use session yet in the faucet.
+don't use sessions yet in the faucet.
 
 Finally, install L<Redis.io|http://redis.io> and make it available on
 the localhost interface, port 6379 (default port). If you change the
-Redis network settings, you need to update the Faucet.pm file. 
+Redis network settings, you'll need to update the Faucet.pm file. 
 
 To launch the server, use the following commands from the project root:
 
@@ -211,10 +211,9 @@ morbo script/mojocoin-faucet.pl -l http://127.0.0.1:3000
 
 script/mojocoin-faucet.pl daemon -l http://*:80
 
-You can use the Hypnotoad server for a prefork Unix-optimized server.
-It's not been tested yet however for the faucet, so hold your horses.
-The single process should be plenty for now as it runs on an event
-loop in cooperative multitasking mode. 
+You can use Hypnotoad for a prefork Unix-optimized server, Although it has not
+been tested with the faucet yet.  The default Mojolicious server should be
+enough since the application is optimized for asynchronous IO.
 
 =head2 Bugs
 

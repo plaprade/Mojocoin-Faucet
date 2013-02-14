@@ -49,8 +49,8 @@
                 way to the bottom of the topbar */
                 padding-top: 60px; 
             }
-            /* Footer
-            -------------------------------------------------- */
+
+            /* Footer -------------------------------------------------- */
 
             .footer {
                 text-align: center;
@@ -129,8 +129,7 @@
 
     <%= content %>
 
-    <!-- Footer
-    ================================================== -->
+    <!-- Footer ================================================== -->
     <footer class="footer">
         <div class="container">
             <p><strong>Privacy notice:</strong> We store your IP address

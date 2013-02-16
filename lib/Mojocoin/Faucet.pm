@@ -15,7 +15,8 @@ use version; our $VERSION = version->declare("v0.0.1");
 sub startup {
     my $self = shift;
 
-    $self->secret( `echo -n \`cat etc/secret.key\`` );
+    my $config = $self->plugin('Config');
+    $self->secret( $config );
 
     # Documentation browser under "/perldoc"
     $self->plugin('PODRenderer');
@@ -26,16 +27,16 @@ sub startup {
     # bitcoin client.
     $self->helper( bitcoin => sub {
         state $bitcoin = Continuum::BitcoinRPC->new(
-            url => 'http://127.0.0.1:18332',
-            username => `echo -n \`cat etc/username.key\``,
-            password => `echo -n \`cat etc/password.key\``,
+            url => $config->{url},
+            username => $config->{username},
+            password => $config->{password},
         );
     });
 
     # Mojolicious helper. Returns a handle to the Redis server.
     $self->helper( redis => sub {
         state $redis = Continuum::Redis->new( 
-            server => '127.0.0.1:6379'
+            server => $config->{redis} # '127.0.0.1:6379'
         );    
     });
 

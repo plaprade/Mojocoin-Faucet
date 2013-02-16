@@ -7,7 +7,6 @@ use Continuum;
 use Continuum::BitcoinRPC;
 use Continuum::Redis;
 use Mojo::Redis;
-use Digest::SHA qw( sha256 );
 
 use version; our $VERSION = version->declare("v0.0.1"); 
 

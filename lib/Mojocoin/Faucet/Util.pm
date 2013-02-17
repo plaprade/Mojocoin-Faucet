@@ -1,5 +1,8 @@
 package Mojocoin::Faucet::Util;
 
+use strict;
+use warnings;
+
 use List::Util qw( min );
 
 use base 'Exporter';

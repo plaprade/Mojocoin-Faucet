@@ -3,6 +3,7 @@ package Mojocoin::Faucet::Controller;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Mojocoin::Faucet::Util qw( :all );
+use Continuum::BitcoinRPC::Util qw( AmountToJSON JSONToAmount );
 
 use Continuum;
 use GD::Barcode::QRcode;
@@ -23,6 +24,8 @@ sub home {
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
 
+            $balance = JSONToAmount( $balance );
+
             defined $balance && defined $address
                 or $self->flash(
                     error => "Could not communicate with the "
@@ -33,7 +36,8 @@ sub home {
                 template => '/controller/home',
                 address => $address || 'No Address',
                 balance => format_balance( $balance ),
-                max_withdrawal => max_withdrawal( $balance ),
+                max_withdrawal => 
+                    AmountToJSON( max_withdrawal( $balance ) ),
                 url => $address ?
                     uri_escape( "bitcoin:$address" ) : '',
                 authorized => $authorized,
@@ -65,18 +69,23 @@ sub request {
     };
 
     # Validate the amount as a numeric value
-    looks_like_number( $amount ) 
-        && $amount >= 0.00000001 or do {
+    looks_like_number( $amount ) or do {
         $self->flash( error => "Invalid bitcoin amount" );
         $self->redirect_to( '/' );
         return;
     };
 
     # Round up to the next Satoshi 
-    $amount = sprintf( '%.8f', $self->param( 'amount' ) || 0 );
+    $amount = JSONToAmount( $self->param( 'amount' ) || 0 );
+
+    $amount > 0 or do {
+        $self->flash( error => "Invalid bitcoin amount" );
+        $self->redirect_to( '/' );
+        return;
+    };
 
     # Explicit conversion to numeric. Otherwise SendFrom doesn't work
-    $amount += 0.00;
+    $amount += 0;
 
     $self->ip_authorized
         ->merge( $self->bitcoin->GetBalance )
@@ -102,20 +111,25 @@ sub request {
                 return;
             }
 
+            $balance = JSONToAmount( $balance );
             my $max_withdrawal = max_withdrawal( $balance );
 
+            # INT comparison here
             $amount <= $max_withdrawal or do {
                 $self->flash( error => "We currently only accept "
-                    . "withdrawals up to $max_withdrawal Bitcoins" );
+                    . "withdrawals up to "
+                    . AmountToJSON( $max_withdrawal )
+                    . " Bitcoins" );
                 $self->redirect_to( '/' );
                 return;
             };
 
-            $self->bitcoin->SendFrom( '' => $address => $amount )
+            my $float_amount = AmountToJSON( $amount );
+            $self->bitcoin->SendToAddress( $address => $float_amount )
                 ->merge( $self->ip_increment )
                 ->then( sub {
                     $self->flash( message => 
-                        "$amount BTC sent to $address" );
+                        "$float_amount BTC sent to $address" );
                     # Remove the POST request from the browser cache
                     $self->redirect_to( '/' );
                 });

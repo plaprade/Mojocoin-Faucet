@@ -18,7 +18,7 @@ sub home {
 
     $self->render_later;
 
-    $self->bitcoin->GetBalance
+    $self->bitcoin->GetBalance( '' )
         ->merge( $self->bitcoin->GetAccountAddress( '' ) )
         ->merge( $self->ip_authorized )
         ->then( sub {
@@ -125,7 +125,7 @@ sub request {
             };
 
             my $float_amount = AmountToJSON( $amount );
-            $self->bitcoin->SendToAddress( $address => $float_amount )
+            $self->bitcoin->SendFrom( '' => $address => $float_amount )
                 ->merge( $self->ip_increment )
                 ->then( sub {
                     $self->flash( message => 

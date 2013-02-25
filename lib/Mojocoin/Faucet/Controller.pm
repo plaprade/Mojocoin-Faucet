@@ -42,7 +42,7 @@ sub home {
                     uri_escape( "bitcoin:$address" ) : '',
                 authorized => $authorized,
             );
-        });
+        })->persist;
 }
 
 # Automatically render template controller/about.html.ep
@@ -133,7 +133,7 @@ sub request {
                     # Remove the POST request from the browser cache
                     $self->redirect_to( '/' );
                 });
-        });
+        })->persist;
 }
 
 sub qrcode {

@@ -185,6 +185,9 @@ L<EV> (recommended event loop library)
 =item * 
 L<Mojo::Redis>
 
+=item *
+L<GD::Barcode>
+
 =back
 
 You may be missing upstream dependencies from CPAN.  Just install them as you

@@ -74,6 +74,7 @@ And _at least_ the following modules from CPAN:
 - [AnyEvent](http://search.cpan.org/perldoc?AnyEvent)
 - [EV](http://search.cpan.org/perldoc?EV) (recommended event loop library)
 - [Mojo::Redis](http://search.cpan.org/perldoc?Mojo::Redis)
+- [GD::Barcode](http://search.cpan.org/perldoc?GD::Barcode)
 
 You may be missing upstream dependencies from CPAN.  Just install them as you
 go.

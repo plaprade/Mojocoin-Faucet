@@ -17,7 +17,7 @@ sub startup {
     my $config = $self->plugin( 'Config',
         secret => 'sew5Greugoas',
         redis => '127.0.0.1:6379',
-        bitcoin_url => '127.0.0.1:18333',
+        bitcoin_url => 'http://127.0.0.1:18333',
         bitcoin_user => 'test',
         bitcoin_pass => 'bunBem6Okno',
     );
@@ -35,7 +35,7 @@ sub startup {
         state $bitcoin = Continuum::BitcoinRPC->new(
             url => $config->{bitcoin_url},
             username => $config->{bitcoin_user},
-            password => $config->{bitcoin_pass},
+            password => $config->{bitcoin_pass}
         );
     });
 

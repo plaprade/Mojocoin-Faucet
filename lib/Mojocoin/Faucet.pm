@@ -197,15 +197,17 @@ You'll need to install bitcoind and configure it to use RPC:
 
 L<bitcoin.org|http://bitcoin.org>
 
-The Faucet needs to be able to communicate with bitcoind through RPC.  In the
-project root, create a directory named C<etc> and two files called
-C<username.key> and C<password.key> containing the bitcoin RPC username and
-password respectively. This is fine for a testnet faucet, but you may need to
-apply better security if you wish to run a production faucet. 
+The Faucet needs some configuration settings in the file mojocoin-faucet.conf
+at the root directory of the application.
 
-Again in C<etc>, create a file called C<secret.key> with a random
-password. This secret is used to sign session cookies. However, we
-don't use sessions yet in the faucet.
+    # mojocoin-faucet.conf
+    {
+        secret => 'sew5Greugoas',
+        redis => '127.0.0.1:6379',
+        bitcoin_url => 'http://127.0.0.1:18332',
+        bitcoin_user => 'test',
+        bitcoin_pass => 'bunBem6Okno',
+    };
 
 Finally, install L<Redis.io|http://redis.io> and make it available on
 the localhost interface, port 6379 (default port). If you change the

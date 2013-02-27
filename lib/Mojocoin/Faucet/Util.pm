@@ -1,6 +1,12 @@
 package Mojocoin::Faucet::Util;
 
+use strict;
+use warnings;
+
 use List::Util qw( min );
+use Continuum::BitcoinRPC::Util qw( AmountToJSON JSONToAmount );
+
+use POSIX qw( ceil );
 
 use base 'Exporter';
 
@@ -14,17 +20,13 @@ our %EXPORT_TAGS = (
 );
 
 sub max_withdrawal {
-    my $balance = shift;
-    sprintf( '%.2f', 
-        defined $balance ? 
-            min( $balance/100, 5 ) : 0 );
+    my $int = shift || 0;
+    min( ceil( $int/1e8 )*1e8 / 100, 5000000000 );
 }
 
 sub format_balance {
-    my $balance = shift;
-    sprintf( '%.2f', 
-        defined $balance ?
-            int( $balance*100 )/100 : 0 );
+    my $int = shift || 0;
+    sprintf( '%.2f', AmountToJSON( $int ) );
 }
 
 1;

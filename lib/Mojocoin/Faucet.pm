@@ -17,7 +17,7 @@ sub startup {
     my $config = $self->plugin( 'Config',
         secret => 'sew5Greugoas',
         redis => '127.0.0.1:6379',
-        bitcoin_url => 'http://127.0.0.1:18333',
+        bitcoin_url => 'http://127.0.0.1:18332',
         bitcoin_user => 'test',
         bitcoin_pass => 'bunBem6Okno',
     );

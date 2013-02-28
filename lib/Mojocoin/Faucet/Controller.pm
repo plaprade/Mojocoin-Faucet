@@ -19,6 +19,8 @@ sub home {
     $self->render_later;
 
     my $account = $self->app->config->{bitcoin}->{account};
+    my $percent = $self->app->config->{limits}->{max_percent};
+    my $max = $self->app->config->{limits}->{max_amount};
     $self->bitcoin->GetBalance( $account )
         ->merge( $self->bitcoin->GetAccountAddress( $account ) )
         ->merge( $self->ip_authorized )
@@ -38,9 +40,11 @@ sub home {
                 address => $address || 'No Address',
                 balance => format_balance( $balance ),
                 max_withdrawal => 
-                    AmountToJSON( max_withdrawal( $balance ) ),
+                    AmountToJSON(
+                        max_withdrawal( $balance, $percent, $max )
+                    ),
                 url => $address ?
-                    uri_escape( "bitcoin:$address" ) : '',
+                    uri_escape( "bitcoin:$address" ) : q{},
                 authorized => $authorized,
             );
         })->persist;
@@ -89,6 +93,8 @@ sub request {
     $amount += 0;
 
     my $account = $self->app->config->{bitcoin}->{account};
+    my $percent = $self->app->config->{limits}->{max_percent};
+    my $max = $self->app->config->{limits}->{max_amount};
     $self->ip_authorized
         ->merge( $self->bitcoin->GetBalance( $account ) )
         ->merge( $self->bitcoin->ValidateAddress( $address ) )
@@ -114,7 +120,7 @@ sub request {
             }
 
             $balance = JSONToAmount( $balance );
-            my $max_withdrawal = max_withdrawal( $balance );
+            my $max_withdrawal = max_withdrawal( $balance, $percent, $max );
 
             # INT comparison here
             $amount <= $max_withdrawal or do {

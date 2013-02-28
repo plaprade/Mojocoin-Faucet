@@ -38,7 +38,7 @@ sub home {
             $self->render(
                 template => '/controller/home',
                 address => $address || 'No Address',
-                balance => format_balance( $balance ),
+                fbalance => format_balance( $balance ),
                 max_withdrawal => 
                     AmountToJSON(
                         max_withdrawal( $balance, $percent, $max )

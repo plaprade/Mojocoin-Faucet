@@ -29,7 +29,16 @@ sub max_withdrawal {
 
 sub format_balance {
     my $int = shift || 0;
-    sprintf( '%.2f', AmountToJSON( $int ) );
+
+    my $satoshi = $int % 1e6;
+    my $main = ( $int - $satoshi ) / 1e8;
+    $satoshi /= 10 while $satoshi % 10 == 0 && $satoshi;
+
+    if ( $satoshi ) {
+        "$main<span class='satoshi'>$satoshi</span>";
+    } else {
+        $main;
+    }
 }
 
 1;

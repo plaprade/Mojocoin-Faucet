@@ -14,18 +14,7 @@ use version; our $VERSION = version->declare("v0.0.1");
 sub startup {
     my $self = shift;
 
-    my $config = $self->plugin( 'Config',
-        secret => 'sew5Greugoas',
-        redis => {
-            url => '127.0.0.1:6379',
-        },
-        bitcoin => {
-            url => 'http://127.0.0.1:18332',
-            username => 'test',
-            password => 'bunBem6Okno',
-            account => 'Mojocoin Faucet',
-        },
-    );
+    my $config = $self->plugin( 'Config' );
 
     $self->secret( $config->{secret} );
 

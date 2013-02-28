@@ -196,21 +196,7 @@ You'll need to install bitcoind and configure it to use RPC:
 L<bitcoin.org|http://bitcoin.org>
 
 The Faucet needs some configuration settings in the file mojocoin-faucet.conf
-at the root directory of the application.
-
-    # mojocoin-faucet.conf
-    {
-        secret => 'sew5Greugoas',
-        redis => {
-            url => '127.0.0.1:6379',
-        },
-        bitcoin => {
-            url => 'http://127.0.0.1:18332',
-            username => 'test',
-            password => 'bunBem6Okno',
-            account => 'Mojocoin Faucet',
-        },
-    };
+at the root directory of the application. Look at mojocoin-faucet.conf.example.
 
 Finally, install L<Redis.io|http://redis.io> and make it available on
 the localhost interface, port 6379 (default port). If you change the

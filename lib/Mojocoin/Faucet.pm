@@ -14,7 +14,9 @@ use version; our $VERSION = version->declare("v0.0.1");
 sub startup {
     my $self = shift;
 
-    $self->secret( `echo -n \`cat etc/secret.key\`` );
+    my $config = $self->plugin( 'Config' );
+
+    $self->secret( $config->{secret} );
 
     # Documentation browser under "/perldoc"
     $self->plugin('PODRenderer');
@@ -25,16 +27,16 @@ sub startup {
     # bitcoin client.
     $self->helper( bitcoin => sub {
         state $bitcoin = Continuum::BitcoinRPC->new(
-            url => 'http://127.0.0.1:18332',
-            username => `echo -n \`cat etc/username.key\``,
-            password => `echo -n \`cat etc/password.key\``,
+            url => $config->{bitcoin}->{url},
+            username => $config->{bitcoin}->{username},
+            password => $config->{bitcoin}->{password},
         );
     });
 
     # Mojolicious helper. Returns a handle to the Redis server.
     $self->helper( redis => sub {
         state $redis = Continuum::Redis->new( 
-            server => '127.0.0.1:6379'
+            server => $config->{redis}->{url},
         );    
     });
 
@@ -177,6 +179,9 @@ L<EV> (recommended event loop library)
 =item * 
 L<Mojo::Redis>
 
+=item *
+L<GD::Barcode>
+
 =back
 
 You may be missing upstream dependencies from CPAN.  Just install them as you
@@ -186,15 +191,22 @@ You'll need to install bitcoind and configure it to use RPC:
 
 L<bitcoin.org|http://bitcoin.org>
 
-The Faucet needs to be able to communicate with bitcoind through RPC.  In the
-project root, create a directory named C<etc> and two files called
-C<username.key> and C<password.key> containing the bitcoin RPC username and
-password respectively. This is fine for a testnet faucet, but you may need to
-apply better security if you wish to run a production faucet. 
+The Faucet needs some configuration settings in the file mojocoin-faucet.conf
+at the root directory of the application.
 
-Again in C<etc>, create a file called C<secret.key> with a random
-password. This secret is used to sign session cookies. However, we
-don't use sessions yet in the faucet.
+    # mojocoin-faucet.conf
+    {
+        secret => 'sew5Greugoas',
+        redis => {
+            url => '127.0.0.1:6379',
+        },
+        bitcoin => {
+            url => 'http://127.0.0.1:18332',
+            username => 'test',
+            password => 'bunBem6Okno',
+            account => 'Mojocoin Faucet',
+        },
+    };
 
 Finally, install L<Redis.io|http://redis.io> and make it available on
 the localhost interface, port 6379 (default port). If you change the

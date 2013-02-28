@@ -18,8 +18,9 @@ sub home {
 
     $self->render_later;
 
-    $self->bitcoin->GetBalance( '' )
-        ->merge( $self->bitcoin->GetAccountAddress( '' ) )
+    my $account = $self->app->config->{bitcoin}->{account};
+    $self->bitcoin->GetBalance( $account )
+        ->merge( $self->bitcoin->GetAccountAddress( $account ) )
         ->merge( $self->ip_authorized )
         ->then( sub {
             my ( $balance, $address, $authorized ) = @_;
@@ -87,8 +88,9 @@ sub request {
     # Explicit conversion to numeric. Otherwise SendFrom doesn't work
     $amount += 0;
 
+    my $account = $self->app->config->{bitcoin}->{account};
     $self->ip_authorized
-        ->merge( $self->bitcoin->GetBalance )
+        ->merge( $self->bitcoin->GetBalance( $account ) )
         ->merge( $self->bitcoin->ValidateAddress( $address ) )
         ->then( sub {
             my ( $authorized, $balance, $valid ) = @_;
@@ -125,7 +127,7 @@ sub request {
             };
 
             my $float_amount = AmountToJSON( $amount );
-            $self->bitcoin->SendFrom( '' => $address => $float_amount )
+            $self->bitcoin->SendFrom( $account => $address => $float_amount )
                 ->merge( $self->ip_increment )
                 ->then( sub {
                     $self->flash( message => 

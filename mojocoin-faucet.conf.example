@@ -1,0 +1,12 @@
+{
+    secret => 'sew5Greugoas',
+    redis => {
+        url => '127.0.0.1:6379',
+    },
+    bitcoin => {
+        url => 'http://127.0.0.1:18332',
+        username => 'test',
+        password => 'bunBem6Okno',
+        account => 'Mojocoin Faucet',
+    },
+};

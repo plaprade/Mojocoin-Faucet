@@ -48,11 +48,8 @@ sub startup {
         $self->redis->hget( testnetip => $ip )->then( sub {
             my $value = shift || 0;
             # Maximum 10 withdrawals per IP address
-            if ( defined $config->{limits}->{max_per_ip} ) {
-                $value < $config->{limits}->{max_per_ip};
-            } else {
-                1;
-            }
+            my $max = $config->{limits}->{max_per_ip};
+            defined $max ? $value < $max : 1;
         });
     });
 

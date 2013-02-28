@@ -16,10 +16,15 @@ sub startup {
 
     my $config = $self->plugin( 'Config',
         secret => 'sew5Greugoas',
-        redis => '127.0.0.1:6379',
-        bitcoin_url => 'http://127.0.0.1:18332',
-        bitcoin_user => 'test',
-        bitcoin_pass => 'bunBem6Okno',
+        redis => {
+            url => '127.0.0.1:6379',
+        },
+        bitcoin => {
+            url => 'http://127.0.0.1:18332',
+            username => 'test',
+            password => 'bunBem6Okno',
+            account => 'Mojocoin Faucet',
+        },
     );
 
     $self->secret( $config->{secret} );
@@ -33,16 +38,16 @@ sub startup {
     # bitcoin client.
     $self->helper( bitcoin => sub {
         state $bitcoin = Continuum::BitcoinRPC->new(
-            url => $config->{bitcoin_url},
-            username => $config->{bitcoin_user},
-            password => $config->{bitcoin_pass}
+            url => $config->{bitcoin}->{url},
+            username => $config->{bitcoin}->{username},
+            password => $config->{bitcoin}->{password},
         );
     });
 
     # Mojolicious helper. Returns a handle to the Redis server.
     $self->helper( redis => sub {
         state $redis = Continuum::Redis->new( 
-            server => $config->{redis}
+            server => $config->{redis}->{url},
         );    
     });
 
@@ -203,10 +208,15 @@ at the root directory of the application.
     # mojocoin-faucet.conf
     {
         secret => 'sew5Greugoas',
-        redis => '127.0.0.1:6379',
-        bitcoin_url => 'http://127.0.0.1:18332',
-        bitcoin_user => 'test',
-        bitcoin_pass => 'bunBem6Okno',
+        redis => {
+            url => '127.0.0.1:6379',
+        },
+        bitcoin => {
+            url => 'http://127.0.0.1:18332',
+            username => 'test',
+            password => 'bunBem6Okno',
+            account => 'Mojocoin Faucet',
+        },
     };
 
 Finally, install L<Redis.io|http://redis.io> and make it available on

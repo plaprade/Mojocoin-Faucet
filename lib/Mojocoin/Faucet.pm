@@ -63,7 +63,7 @@ sub startup {
         my $ip = $self->tx->remote_address;
         $self->redis->hget( testnetip => $ip )->then( sub {
             my $value = shift || 0;
-            $self->redis->hset( testnetip => $ip => $value + 1 )
+            $self->redis->hset( testnetip => $ip => $value + 1 );
         });
     });
 

@@ -1,5 +1,11 @@
 {
     secret => 'sew5Greugoas',
+    limits => {
+        min_amount => 0.01,
+        max_amount => 50,
+        max_per_ip => 5,
+        max_percent => 1,
+    },
     redis => {
         url => '127.0.0.1:6379',
     },

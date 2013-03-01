@@ -19,7 +19,7 @@
 
 <h2 class='pagination-centered'>
     <small>We have </small>
-    <span class='text-success'><%= $balance %></span>
+    <span class='text-success'><%== $fbalance %></span>
     <small>bitcoins in the faucet</small> 
 </h2>
 

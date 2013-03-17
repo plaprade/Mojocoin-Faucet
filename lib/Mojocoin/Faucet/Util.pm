@@ -40,7 +40,7 @@ sub format_balance {
             } elsif ( $satoshi % 1e4 ) {
                 sprintf '%04d', ( $satoshi / 1e2 );
             } else {
-                sprintf '%02d', ( $satoshi / 1e6 );
+                sprintf '%02d', ( $satoshi / 1e4 );
             }
         };
         "$main<span class='satoshi'>$fsatoshi</span>";

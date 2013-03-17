@@ -27,7 +27,7 @@
 
 <h2 class='pagination-centered'>
     <small>Maximum withdrawal per request is</small>
-    <span class='text-info'><%= $max_withdrawal %></span>
+    <span class='text-info'><%== $fmax_withdrawal %></span>
     <small>bitcoins</small>
 </h2>
 

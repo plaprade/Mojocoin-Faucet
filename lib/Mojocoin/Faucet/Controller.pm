@@ -35,14 +35,16 @@ sub home {
                         . "local bitcoin node" 
                 );
 
+            my $max_withdrawal =
+                    max_withdrawal( $balance, $percent, $max );
             $self->render(
                 template => '/controller/home',
                 address => $address || 'No Address',
+                balance => $balance,
                 fbalance => format_balance( $balance ),
-                max_withdrawal => 
-                    AmountToJSON(
-                        max_withdrawal( $balance, $percent, $max )
-                    ),
+                max_withdrawal => $max_withdrawal,
+                fmax_withdrawal => 
+                    format_balance( $max_withdrawal ),
                 url => $address ?
                     uri_escape( "bitcoin:$address" ) : q{},
                 authorized => $authorized,

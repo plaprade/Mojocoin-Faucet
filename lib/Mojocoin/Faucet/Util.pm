@@ -31,11 +31,19 @@ sub format_balance {
     my $int = shift || 0;
 
     my $satoshi = $int % 1e6;
-    my $main = ( $int - $satoshi ) / 1e8;
-    $satoshi /= 10 while $satoshi % 10 == 0 && $satoshi;
+    my $main = sprintf '%0.02f', ( $int - $satoshi ) / 1e8;
 
     if ( $satoshi ) {
-        "$main<span class='satoshi'>$satoshi</span>";
+        my $fsatoshi = do {
+            if ( $satoshi % 1e2 ) {
+                sprintf '%06d', $satoshi;
+            } elsif ( $satoshi % 1e4 ) {
+                sprintf '%04d', ( $satoshi / 1e2 );
+            } else {
+                sprintf '%02d', ( $satoshi / 1e6 );
+            }
+        };
+        "$main<span class='satoshi'>$fsatoshi</span>";
     } else {
         $main;
     }

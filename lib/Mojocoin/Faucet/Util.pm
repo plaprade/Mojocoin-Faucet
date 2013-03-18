@@ -31,7 +31,14 @@ sub format_balance {
     my $int = shift || 0;
 
     my $satoshi = $int % 1e6;
-    my $main = sprintf '%0.02f', ( $int - $satoshi ) / 1e8;
+    my $main = do {
+        my $n = $int - $satoshi;
+        if ( $satoshi or $n % 1e8 )  {
+            sprintf '%0.02f', $n * 1e-8;
+        } else {
+            sprintf '%d', $n * 1e-8;
+        }
+    };
 
     if ( $satoshi ) {
         my $fsatoshi = do {

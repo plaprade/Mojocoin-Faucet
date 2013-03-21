@@ -5,6 +5,7 @@
         max_amount => 50,
         max_per_ip => 5,
         max_percent => 1,
+        min_reserve => 0.01,
     },
     redis => {
         url => '127.0.0.1:6379',

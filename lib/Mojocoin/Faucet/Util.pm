@@ -23,8 +23,9 @@ sub max_withdrawal {
     my $int = shift || 0;
     my $percent = shift || 1;
     my $max = shift || 21_000_000;
-    my $max_satoshi = sprintf( '%.0f', $max * 1e8 );
-    min( int( $int * $percent / 100 ), $max_satoshi );
+    my $reserve = shift || 5000;
+    my $positive_reserve = $int - $reserve < 0 ? 0 : $int - $reserve;
+    min( int( $int * $percent / 100 ), $max, $positive_reserve );
 }
 
 sub format_balance {

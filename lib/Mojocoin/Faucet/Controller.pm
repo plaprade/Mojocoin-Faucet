@@ -20,14 +20,15 @@ sub home {
 
     my $account = $self->app->config->{bitcoin}->{account};
     my $percent = $self->app->config->{limits}->{max_percent};
-    my $max = $self->app->config->{limits}->{max_amount};
+    my $max = JSONToAmount( $self->app->config->{limits}->{max_amount} );
+    my $reserve = JSONToAmount( $self->app->config->{limits}->{min_reserve} );
     $self->bitcoin->GetBalance( $account )
         ->merge( $self->bitcoin->GetAccountAddress( $account ) )
         ->merge( $self->ip_authorized )
         ->then( sub {
-            my ( $balance, $address, $authorized ) = @_;
+            my ( $balance_float, $address, $authorized ) = @_;
 
-            $balance = JSONToAmount( $balance );
+            my $balance = JSONToAmount( $balance_float );
 
             defined $balance && defined $address
                 or $self->flash(
@@ -36,7 +37,7 @@ sub home {
                 );
 
             my $max_withdrawal =
-                    max_withdrawal( $balance, $percent, $max );
+                max_withdrawal( $balance, $percent, $max, $reserve );
             $self->render(
                 template => '/controller/home',
                 address => $address || 'No Address',
@@ -93,7 +94,8 @@ sub request {
 
     my $account = $self->app->config->{bitcoin}->{account};
     my $percent = $self->app->config->{limits}->{max_percent};
-    my $max = $self->app->config->{limits}->{max_amount};
+    my $max = JSONToAmount( $self->app->config->{limits}->{max_amount} );
+    my $reserve = JSONToAmount( $self->app->config->{limits}->{min_reserve} );
     $self->ip_authorized
         ->merge( $self->bitcoin->GetBalance( $account ) )
         ->merge( $self->bitcoin->ValidateAddress( $address ) )
@@ -119,7 +121,8 @@ sub request {
             }
 
             $balance = JSONToAmount( $balance );
-            my $max_withdrawal = max_withdrawal( $balance, $percent, $max );
+            my $max_withdrawal =
+                max_withdrawal( $balance, $percent, $max, $reserve );
 
             # INT comparison here
             $amount <= $max_withdrawal or do {

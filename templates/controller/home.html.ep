@@ -47,7 +47,7 @@
     <div class="row-fluid">
         <div class="alert alert-error pagination-centered span6 offset3">
             Maximum number of withdrawals reached. You can withdraw
-            more in 24 hours.
+            more in: <%= $next_withdrawal %>
         </div>
     </div>
 % }

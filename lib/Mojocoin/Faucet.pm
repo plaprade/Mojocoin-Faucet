@@ -7,6 +7,7 @@ use Continuum;
 use Continuum::BitcoinRPC;
 use Continuum::Redis;
 use Mojo::Redis;
+use Mojo::JSON;
 
 use version; our $VERSION = version->declare("v0.0.1"); 
 
@@ -46,10 +47,35 @@ sub startup {
         my $self = shift;
         my $ip = $self->tx->remote_address;
         $self->redis->hget( testnetip => $ip )->then( sub {
-            my $value = shift || 0;
-            # Maximum 10 withdrawals per IP address
-            my $max = $config->{limits}->{max_per_ip};
-            defined $max ? $value < $max : 1;
+            my $result = shift;
+            if ( $result ) {
+                my $json = Mojo::JSON->new;
+                my $hash = $json->decode($result);
+                my $time = $hash->{time};
+                my $penalty = $hash->{penalty};
+                my $now = time;
+                $now > $time + $penalty;
+            } else {
+                1;
+            }
+        });
+    });
+
+    $self->helper( next_withdrawal => sub {
+        my $self = shift;
+        my $ip = $self->tx->remote_address;
+        $self->redis->hget( testnetip => $ip )->then( sub {
+            my $result = shift;
+            if ( $result ) {
+                my $json = Mojo::JSON->new;
+                my $hash = $json->decode($result);
+                my $time = $hash->{time};
+                my $penalty = $hash->{penalty};
+                my $now = time;
+                if ( $now < $time + $penalty ) {
+                    $time + $penalty;
+                }
+            }
         });
     });
 
@@ -59,8 +85,36 @@ sub startup {
         my $self = shift;
         my $ip = $self->tx->remote_address;
         $self->redis->hget( testnetip => $ip )->then( sub {
-            my $value = shift || 0;
-            $self->redis->hset( testnetip => $ip => $value + 1 );
+            my $result = shift;
+            my $json = Mojo::JSON->new;
+            my $limits = $self->config->{limits};
+            my $def_penalty = $limits->{default_penalty} || 60;
+            my $max_penalty = $limits->{max_penalty} || 8 * 3600;
+            my $grace = $limits->{reset_seconds} || 24 * 3600;
+            my $factor = $limits->{penalty_factor} || 2;
+            my $now = time;
+            my $hash = do {
+                if ( $result ) {
+                    my $hash = $json->decode($result);
+                    my $time = $hash->{time};
+                    my $penalty = $hash->{penalty};
+                    my $new_penalty = do {
+                        if ( $now < $time + $penalty + $grace ) {
+                            if ( $penalty * $factor < $max_penalty ) {
+                                $penalty * $factor;
+                            } else {
+                                $max_penalty;
+                            }
+                        } else {
+                            $def_penalty;
+                        }
+                    };
+                    +{ time => $now, penalty => $new_penalty };
+                } else {
+                    +{ time => $now, penalty => $def_penalty };
+                }
+            };
+            $self->redis->hset( testnetip => $ip => $json->encode($hash) );
         });
     });
 

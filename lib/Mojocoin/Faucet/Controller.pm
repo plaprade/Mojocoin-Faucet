@@ -25,8 +25,9 @@ sub home {
     $self->bitcoin->GetBalance( $account )
         ->merge( $self->bitcoin->GetAccountAddress( $account ) )
         ->merge( $self->ip_authorized )
+        ->merge( $self->next_withdrawal )
         ->then( sub {
-            my ( $balance_float, $address, $authorized ) = @_;
+            my ( $balance_float, $address, $authorized, $next ) = @_;
 
             my $balance = JSONToAmount( $balance_float );
 
@@ -46,6 +47,7 @@ sub home {
                 fmax_withdrawal => format_balance( $max_withdrawal ),
                 url => $address ?  uri_escape( "bitcoin:$address" ) : q{},
                 authorized => $authorized,
+                next_withdrawal => gmtime($next) . ' GMT',
             );
         })->persist;
 }

@@ -137,7 +137,7 @@
     <footer class="footer">
         <div class="container">
             <p><strong>Privacy notice:</strong> We store your IP address
-                for up to 24 hours to prevent abuse of our service</p>
+                to prevent abuse of our service.</p>
             <p>Your IP address is <strong><%= $self->tx->remote_address %></strong></p>
             <ul class="footer-links"> 
                 <li><a href="http://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>

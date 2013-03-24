@@ -3,9 +3,12 @@
     limits => {
         min_amount => 0.01,
         max_amount => 50,
-        max_per_ip => 5,
         max_percent => 1,
         min_reserve => 0.01,
+        default_penalty => 300,
+        max_penalty => 8 * 3600,
+        reset_seconds => 24 * 3600,
+        penalty_factor => 2,
     },
     redis => {
         url => '127.0.0.1:6379',

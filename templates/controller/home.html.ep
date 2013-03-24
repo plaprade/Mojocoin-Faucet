@@ -46,8 +46,8 @@
 % } else {
     <div class="row-fluid">
         <div class="alert alert-error pagination-centered span6 offset3">
-            Maximum number of withdrawals reached. You can withdraw
-            more in: <%= $next_withdrawal %>
+            Your IP address can withdraw
+            again in: <%= $next_withdrawal %>
         </div>
     </div>
 % }

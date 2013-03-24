@@ -71,10 +71,9 @@ sub startup {
                 my $hash = $json->decode($result);
                 my $time = $hash->{time};
                 my $penalty = $hash->{penalty};
-                my $now = time;
-                if ( $now < $time + $penalty ) {
-                    $time + $penalty;
-                }
+                $time + $penalty;
+            } else {
+                time;
             }
         });
     });

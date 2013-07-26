@@ -26,7 +26,7 @@ shouldn't been too alien if you have some javascript or node.js
 background. 
 
 To make asynchronous programming easier with Mojolicious, we designed
-the [Continuum](http://github.com/ciphermonk/Continuum) framework. It
+the [Continuum](http://github.com/cpt-octofu/Continuum) framework. It
 allows us to run asynchronous commands in parallel and provide
 merge-point callbacks very easily.  This should be fairly simple to
 understand: 
@@ -48,7 +48,7 @@ understand:
 ```
 
 To communicate with the Satoshi Bitcoin implementation, I wrote
-[Continuum::BitcoinRPC](http://github.com/ciphermonk/Continuum-BitcoinRPC).
+[Continuum::BitcoinRPC](http://github.com/cpt-octofu/Continuum-BitcoinRPC).
 It is a simple JSON/RPC interface to bitcoind.
 
 ## Installation
@@ -58,14 +58,14 @@ features that are only well supported from that version.
 
 You will need the following Perl modules from github:
 
-- [Continuum](http://github.com/ciphermonk/Continuum)
-- [Continuum::BitcoinRPC](http://github.com/ciphermonk/Continuum-BitcoinRPC)
-- [Continuum::Redis](http://github.com/ciphermonk/Continuum-Redis)
-- [anyevent-jsonrpc-perl](http://github.com/ciphermonk/anyevent-jsonrpc-perl)
+- [Continuum](http://github.com/cpt-octofu/Continuum)
+- [Continuum::BitcoinRPC](http://github.com/cpt-octofu/Continuum-BitcoinRPC)
+- [Continuum::Redis](http://github.com/cpt-octofu/Continuum-Redis)
+- [anyevent-jsonrpc-perl](http://github.com/cpt-octofu/anyevent-jsonrpc-perl)
 This is a fork from [AnyEvent::JSONRPC::HTTP::Client](http://search.cpan.org/perldoc?AnyEvent::JSONRPC::HTTP::Client) fixing a small
 issue with error handling in the HTTP client. We only use the HTTP
 client from this package.
-- [Mojocoin::Faucet](http://github.com/ciphermonk/Mojocoin-Faucet) (this
+- [Mojocoin::Faucet](http://github.com/cpt-octofu/Mojocoin-Faucet) (this
 project)
 
 And _at least_ the following modules from CPAN:
@@ -108,7 +108,7 @@ enough since the application is optimized for asynchronous IO.
 
 Please report any bugs in the projects bug tracker:
 
-[http://github.com/ciphermonk/Mojocoin-Faucet/issues](http://github.com/ciphermonk/Mojocoin-Faucet/issues)
+[http://github.com/cpt-octofu/Mojocoin-Faucet/issues](http://github.com/cpt-octofu/Mojocoin-Faucet/issues)
 
 You can also submit a patch.
 

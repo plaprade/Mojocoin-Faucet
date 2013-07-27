@@ -165,7 +165,7 @@ shouldn't been too alien if you have some javascript or node.js
 background. 
 
 To make asynchronous programming easier with Mojolicious, we designed
-the L<Continuum|http://github.com/ciphermonk/Continuum> framework. It
+the L<Continuum|http://github.com/cpt-octofu/Continuum> framework. It
 allows us to run asynchronous commands in parallel and provide
 merge-point callbacks very easily.  This should be fairly simple to
 understand: 
@@ -184,7 +184,7 @@ understand:
         });
 
 To communicate with the Satoshi Bitcoin implementation, I wrote
-L<Continuum::BitcoinRPC|http://github.com/ciphermonk/Continuum-BitcoinRPC>.
+L<Continuum::BitcoinRPC|http://github.com/cpt-octofu/Continuum-BitcoinRPC>.
 It is a simple JSON/RPC interface to bitcoind.
 
 =head2 Installation
@@ -197,22 +197,22 @@ You will need the following Perl modules from github:
 =over
 
 =item *
-L<Continuum|http://github.com/ciphermonk/Continuum>
+L<Continuum|http://github.com/cpt-octofu/Continuum>
 
 =item *
-L<Continuum::BitcoinRPC|http://github.com/ciphermonk/Continuum-BitcoinRPC>
+L<Continuum::BitcoinRPC|http://github.com/cpt-octofu/Continuum-BitcoinRPC>
 
 =item *
-L<Continuum::Redis|http://github.com/ciphermonk/Continuum-Redis>
+L<Continuum::Redis|http://github.com/cpt-octofu/Continuum-Redis>
 
 =item *
-L<anyevent-jsonrpc-perl|http://github.com/ciphermonk/anyevent-jsonrpc-perl>
+L<anyevent-jsonrpc-perl|http://github.com/cpt-octofu/anyevent-jsonrpc-perl>
 This is a fork from L<AnyEvent::JSONRPC::HTTP::Client> fixing a small
 issue with error handling in the HTTP client. We only use the HTTP
 client from this package.
 
 =item *
-L<Mojocoin::Faucet|http://github.com/ciphermonk/Mojocoin-Faucet> (this
+L<Mojocoin::Faucet|http://github.com/cpt-octofu/Mojocoin-Faucet> (this
 project)
 
 =back
@@ -270,7 +270,7 @@ enough since the application is optimized for asynchronous IO.
 
 Please report any bugs in the projects bug tracker:
 
-L<http://github.com/ciphermonk/Mojocoin-Faucet/issues>
+L<http://github.com/cpt-octofu/Mojocoin-Faucet/issues>
 
 You can also submit a patch.
 

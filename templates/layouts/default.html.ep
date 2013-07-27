@@ -140,7 +140,7 @@
                 to prevent abuse of our service.</p>
             <p>Your IP address is <strong><%= $self->tx->remote_address %></strong></p>
             <ul class="footer-links"> 
-                <li><a href="http://github.com/ciphermonk/Mojocoin-Faucet">GitHub Project</a></li>
+                <li><a href="http://github.com/cpt-octofu/Mojocoin-Faucet">GitHub Project</a></li>
                 <li class="muted">&middot;</li>
                 <li><a href="http://bitcoin.org">Bitcoin</a></li>
             </ul>

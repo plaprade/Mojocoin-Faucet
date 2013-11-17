@@ -165,7 +165,7 @@ shouldn't been too alien if you have some javascript or node.js
 background. 
 
 To make asynchronous programming easier with Mojolicious, we designed
-the L<Continuum|http://github.com/cpt-octofu/Continuum> framework. It
+the L<Continuum|http://github.com/plaprade/Continuum> framework. It
 allows us to run asynchronous commands in parallel and provide
 merge-point callbacks very easily.  This should be fairly simple to
 understand: 
@@ -184,7 +184,7 @@ understand:
         });
 
 To communicate with the Satoshi Bitcoin implementation, I wrote
-L<Continuum::BitcoinRPC|http://github.com/cpt-octofu/Continuum-BitcoinRPC>.
+L<Continuum::BitcoinRPC|http://github.com/plaprade/Continuum-BitcoinRPC>.
 It is a simple JSON/RPC interface to bitcoind.
 
 =head2 Installation
@@ -197,22 +197,22 @@ You will need the following Perl modules from github:
 =over
 
 =item *
-L<Continuum|http://github.com/cpt-octofu/Continuum>
+L<Continuum|http://github.com/plaprade/Continuum>
 
 =item *
-L<Continuum::BitcoinRPC|http://github.com/cpt-octofu/Continuum-BitcoinRPC>
+L<Continuum::BitcoinRPC|http://github.com/plaprade/Continuum-BitcoinRPC>
 
 =item *
-L<Continuum::Redis|http://github.com/cpt-octofu/Continuum-Redis>
+L<Continuum::Redis|http://github.com/plaprade/Continuum-Redis>
 
 =item *
-L<anyevent-jsonrpc-perl|http://github.com/cpt-octofu/anyevent-jsonrpc-perl>
+L<anyevent-jsonrpc-perl|http://github.com/plaprade/anyevent-jsonrpc-perl>
 This is a fork from L<AnyEvent::JSONRPC::HTTP::Client> fixing a small
 issue with error handling in the HTTP client. We only use the HTTP
 client from this package.
 
 =item *
-L<Mojocoin::Faucet|http://github.com/cpt-octofu/Mojocoin-Faucet> (this
+L<Mojocoin::Faucet|http://github.com/plaprade/Mojocoin-Faucet> (this
 project)
 
 =back
@@ -256,11 +256,11 @@ To launch the server, use the following commands from the project root:
 
 =head4 Development
 
-morbo script/mojocoin-faucet.pl -l http://127.0.0.1:3000
+C<morbo script/mojocoin-faucet.pl -l http://127.0.0.1:3000>
 
 =head4 Production (single process)
 
-script/mojocoin-faucet.pl daemon -l http://*:80
+C<script/mojocoin-faucet.pl daemon -l http://*:80>
 
 You can use Hypnotoad for a prefork Unix-optimized server, Although it has not
 been tested with the faucet yet.  The default Mojolicious server should be
@@ -270,7 +270,7 @@ enough since the application is optimized for asynchronous IO.
 
 Please report any bugs in the projects bug tracker:
 
-L<http://github.com/cpt-octofu/Mojocoin-Faucet/issues>
+L<http://github.com/plaprade/Mojocoin-Faucet/issues>
 
 You can also submit a patch.
 
@@ -302,7 +302,7 @@ Open a pull request
 Like what you see? You can support the project by donating in
 L<Bitcoins|http://www.weusecoins.com/> to:
 
-B<17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi>
+B<1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY>
 
 =cut
 

@@ -140,12 +140,12 @@
                 to prevent abuse of our service.</p>
             <p>Your IP address is <strong><%= $self->tx->remote_address %></strong></p>
             <ul class="footer-links"> 
-                <li><a href="http://github.com/cpt-octofu/Mojocoin-Faucet">GitHub Project</a></li>
+                <li><a href="http://github.com/plaprade/Mojocoin-Faucet">GitHub Project</a></li>
                 <li class="muted">&middot;</li>
                 <li><a href="http://bitcoin.org">Bitcoin</a></li>
             </ul>
-            <p>Support us: <strong>17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi</strong>
-                (<a href="bitcoin:17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi">link</a>)
+            <p>Support us: <strong>1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY</strong>
+                (<a href="bitcoin:1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY">link</a>)
             </p>
         </div>
     </footer>

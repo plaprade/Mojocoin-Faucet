@@ -8,8 +8,8 @@
 <p class='lead'>The Mojocoin Faucet is free software<p>
 
 <p class='lead'>
-    <a href='http://github.com/cpt-octofu/Mojocoin-Faucet' >
-    github.com/cpt-octofu/Mojocoin-Faucet
+    <a href='http://github.com/plaprade/Mojocoin-Faucet' >
+    github.com/plaprade/Mojocoin-Faucet
     </a>
 </p>
 
@@ -18,15 +18,14 @@ source code is released into the public domain. You can contribute to
 the project by helping with code maintenance or by donating to</p>
 
 <p class='lead'>
-    <a href='bitcoin:17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi' >
-    17YWBJUHaiLjZWaCyPwcV8CJDpfoFzc8Gi
-    </a>
+    <a href='bitcoin:1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY'
+    >1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY</a>
 </p>
 
 <p>We run a full bitcoin testnet3 node. It mines 24/7 and is available
 at</p>
 
-<p class='lead'>199.26.85.40:18333</p>
+<p class='lead'>battlestar.xeno-genesis.com:18333</p>
 
 <p>
 The Mojocoin Faucet is powered by

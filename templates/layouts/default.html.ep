@@ -143,6 +143,8 @@
                 <li><a href="http://github.com/plaprade/Mojocoin-Faucet">GitHub Project</a></li>
                 <li class="muted">&middot;</li>
                 <li><a href="http://bitcoin.org">Bitcoin</a></li>
+                <li class="muted">&middot;</li>
+                <li><a href="https://play.google.com/store/apps/details?id=de.schildbach.wallet_test">Bitcoin Wallet for Testnet</a></li>
             </ul>
             <p>Support us: <strong>1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY</strong>
                 (<a href="bitcoin:1EZqufZzgwmvUNcnZcVnra7vohrq3s7ZmY">link</a>)

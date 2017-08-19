@@ -1,3 +1,5 @@
+Mojocoin::Faucet has been discontinued and kept here for historical reasons
+
 # Mojocoin::Faucet - Bitcoin Faucet Implementation
 
 Mojocoin::Faucet is a lightweight implementation of a Bitcoin faucet
